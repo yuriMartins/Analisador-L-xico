@@ -33,6 +33,70 @@ public class Analisador {
         linhas_arq = LerArq.ler(arquivo);
     }
     
+    public void separaTokens() {
+        
+        int ch = 0;
+    
+   for(int i=0;i < linhas_arq.size();i++){
+       
+       String temp = linhas_arq.get(i);
+        
+       while(ch < temp.length()){
+           int t = temp.charAt(ch);
+        
+           if((t<=90 && t>=65) || (t>=97 && t<=122)) {
+               int a = temp.charAt(ch+1);
+              if(a == 32 ||a == 13|| a == 59||a == 44|| a == 43||a == 45||a == 42||a == 47||a == 60|| a == 62|| a == 61|| a == 34||a == 39){
+                  Token novo = new Token(temp.substring(ch, ch + 1),LETRA);
+                  tokens.add(novo);
+                  
+              }
+          }
+           
+           if()
+           
+           
+           
+           
+           
+           
+           
+           ch ++;
+       }
+       
+       
+       
+       
+       
+       
+       
+       
+   }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+}
+    
+    public void imprimiTokens(){
+        System.out.println(tokens);
+    }
+    
     public void mostrarLinhas(){
         System.out.println(linhas_arq);
     }

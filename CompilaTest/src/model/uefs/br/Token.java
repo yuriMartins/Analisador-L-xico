@@ -14,15 +14,24 @@ import java.util.ArrayList;
  */
 public class Token {
     
-    private ArrayList<String>leximas = new ArrayList<String>();
+    private ArrayList<String>lexemas = new ArrayList<String>();
     private String nome;
+    private int tipo;
     
-    
+    public Token(String nome, int tipo){
+        this.nome = nome;
+        this.tipo = tipo;
+    }
     public boolean verifica(String lexema){
         
         
        
         return true;
+    }
+    
+    @Override
+    public String toString(){
+        return nome;
     }
     
 }
