@@ -15,5 +15,14 @@ import java.util.ArrayList;
 public class Token {
     
     private ArrayList<String>leximas = new ArrayList<String>();
+    private String nome;
+    
+    
+    public boolean verifica(String lexema){
+        
+        
+       
+        return true;
+    }
     
 }
