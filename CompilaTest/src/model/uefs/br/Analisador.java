@@ -40,57 +40,69 @@ public class Analisador {
    for(int i=0;i < linhas_arq.size();i++){
        
        String temp = linhas_arq.get(i);
+       String lexema;
+        int tamanho = temp.length();
+       
+           
         
-       while(ch < temp.length()){
-           int t = temp.charAt(ch);
+        while(){
+        int t = temp.charAt(ch);
+           
+           
+          switch (t){
+              
+              case IDENTIFICADOR:
+                  
+                  
+                  while(delimitadorId(a) < 0){
+                      
+                      
+                      
+                     
+                  }
+                  
+                  break;
+                  
+              case NUMERO: 
+                  
+                  break;
+              
+          }
+          
+        }
+           
+           if(delimitadorId(t) > 0){// Verifica 
+               lexema = temp.substring(0, ch - 1);
+               temp = temp.substring(ch, tamanho);
+           }               
         
-           if((t<=90 && t>=65) || (t>=97 && t<=122)) {
+          /* if((t<=90 && t>=65) || (t>=97 && t<=122)) {
                int a = temp.charAt(ch+1);
               if(a == 32 ||a == 13|| a == 59||a == 44|| a == 43||a == 45||a == 42||a == 47||a == 60|| a == 62|| a == 61|| a == 34||a == 39){
                   Token novo = new Token(temp.substring(ch, ch + 1),LETRA);
                   tokens.add(novo);
                   
               }
-          }
-           
-           if()
-           
-           
-           
-           
-           
-           
-           
-           ch ++;
-       }
+          }*/
        
-       
-       
-       
-       
-       
-       
-       
-   }
+ }
+ }
     
+    private int isletra(int c){
+        if ( (c>= 97 && c <=122) || (c>= 65 && c <=90)){
+            return IDENTIFICADOR;
+        }
+        
+        else return 0;
+    }
     
+    private int delimitadorId(int c){
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+        int a = c;
+        if(a == 32 ||a == 13|| a == 59||a == 44|| a == 43||a == 45||a == 42||a == 47||a == 60|| a == 62|| a == 61|| a == 34||a == 39 ){
+            return a;
+        }
+        else return -1;
 }
     
     public void imprimiTokens(){
