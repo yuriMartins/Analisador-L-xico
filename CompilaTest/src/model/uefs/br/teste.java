@@ -16,9 +16,11 @@ public class teste {
         Analisador novo = new Analisador();
         String t = "C:\\Users\\Kelvin\\Downloads\\delimww.txt";
         novo.lerArq(t);
-        //novo.mostrarLinhas();
+        /*novo.mostrarLinhas();*/
         novo.separaTokens();
         novo.imprimiTokens();
+        
+        
         
         
         
