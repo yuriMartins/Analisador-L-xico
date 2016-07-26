@@ -64,23 +64,44 @@ public class Analisador {
               break;
                   
               case NUMERO: 
-                  
+                  current_last = delimitadorNumero(ch,temp);                
+                  String novo3 = temp.substring(ch, current_last);
+                  Token t4 = new Token(novo3, NUMERO);
+                  tokens.add(t4);
+                    ch = current_last; 
                   break;
               
               case CADEIA_DE_CARACTERES:
-                  
+                  current_last = delimitadorCadeia(ch,temp);                
+                  String novo4 = temp.substring(ch, current_last +1);
+                  Token t5 = new Token(novo4, CADEIA_DE_CARACTERES);
+                  tokens.add(t5);
+                    ch = current_last;
+                    ch++;
                   break;
                   
                   case CARACTER:
-                  
+                  current_last = delimitadorCaracter(ch,temp);                
+                  String novo5 = temp.substring(ch, current_last+1);
+                  Token t6 = new Token(novo5, CARACTER);
+                  tokens.add(t6);
+                    ch = current_last;
+                    ch++;
                   break;
                   
                   case ARITMETICOS:
-                  //ch++;
+                  String novo1 = temp.substring(ch, current_last+1);
+                  Token t2 = new Token(novo1, ARITMETICOS);
+                  tokens.add(t2);
+                  ch++;
                   break;
                   
                   case RELACIONAIS:
-                  
+                  current_last = delimitadorRelacional(ch,temp);
+                  String novo2 = temp.substring(ch, current_last);
+                  Token t3 = new Token(novo2, RELACIONAIS);
+                  tokens.add(t3);
+                    ch = current_last;                  
                   break;
                   
                   case DEL_COMENT:
@@ -92,10 +113,10 @@ public class Analisador {
                   break;
                   
                   case -1:
-                      
+                      System.out.print("entrei aqui");
                       break;
                   
-              
+           
           }
        
         }
@@ -112,7 +133,23 @@ public class Analisador {
                     if(isNumero(a)) return NUMERO;
                     else return ARITMETICOS;
                  }
+        else if(isNumero(cod)) return NUMERO;
         else if(cod == 43 || cod == 42 || cod == 47) return ARITMETICOS;
+        else if(cod >=60 && cod <= 62) return RELACIONAIS;
+        else if(cod == 123) return DEL_COMENT;
+        else if(cod == 40 || cod == 32 || cod == 59 || cod == 44) return DELIMITADORES;
+        
+         
+        else return -1;// 
+    }
+    
+    private int isToken(int cod){
+        
+        if(isLetra(cod)) return IDENTIFICADOR; // Identificador,palavras reservadas, 
+        else if(cod == 34) return CADEIA_DE_CARACTERES;
+        else if(cod == 39) return CARACTER;
+        else if(isNumero(cod)) return NUMERO;
+        else if(cod == 43 || cod == 42 || cod == 47|| cod == 45) return ARITMETICOS;
         else if(cod >=60 && cod <= 62) return RELACIONAIS;
         else if(cod == 123) return DEL_COMENT;
         else if(cod == 40 || cod == 32 || cod == 59 || cod == 44) return DELIMITADORES;
@@ -140,7 +177,55 @@ public class Analisador {
     private int delimitadorId(int ch, String temp){// Retorna o indice do primeiro delimitador encontrado.
         int a = temp.charAt(ch);
         while(ch < temp.length()){
-        if(a == 32 || a == 59||a == 44|| a == 43||a == 45||a == 42||a == 47||a == 60|| a == 62|| a == 61|| a == 34||a == 39 ){
+        if(a == 32 || a == 59||a == 44|| a == 43||a == 45||a == 42||a == 47||a == 60|| a == 62|| a == 61|| a == 34||a == 39 || a == 123||a == 40 ){
+            return ch;
+        }
+        ch++;
+        a = temp.charAt(ch);
+        }
+        return temp.length() - 1;
+    }
+    
+    private int delimitadorRelacional(int ch, String temp){// Retorna o indice do primeiro delimitador encontrado.
+        int a = temp.charAt(ch);
+        while(ch < temp.length()){
+        if(a == 32 || a == 59||a == 44|| a == 43||a == 45||a == 42||a == 47|| a == 34||a == 39||a == 123||a == 40|| isNumero(a) || isLetra(a)){
+            return ch;
+        }
+        ch++;
+        a = temp.charAt(ch);
+        }
+        return temp.length() - 1;
+    }
+    
+    private int delimitadorNumero(int ch, String temp){// Retorna o indice do primeiro delimitador encontrado.
+        int a = temp.charAt(ch);
+        while(ch < temp.length()){
+        if(a == 32 || a == 59||a == 44|| a == 43||a == 42||a == 47|| a == 34||a == 39||a == 123||a == 40||a == 60|| a == 62|| a == 61){
+            return ch;
+        }
+        ch++;
+        a = temp.charAt(ch);
+        }
+        return temp.length() - 1;
+    }
+    
+    private int delimitadorCadeia(int ch, String temp){// Retorna o indice do primeiro delimitador encontrado.
+        int a = temp.charAt(ch+1);
+        while(ch < temp.length()){
+        if(a == 34){
+            return ch;
+        }
+        ch++;
+        a = temp.charAt(ch);
+        }
+        return temp.length() - 1;
+    }
+    
+    private int delimitadorCaracter(int ch, String temp){// Retorna o indice do primeiro delimitador encontrado.
+        int a = temp.charAt(ch+1);
+        while(ch < temp.length()){
+        if(a == 39){
             return ch;
         }
         ch++;
