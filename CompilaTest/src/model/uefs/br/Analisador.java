@@ -24,10 +24,12 @@ public class Analisador {
     static final int CADEIA_DE_CARACTERES = 8;
     static final int CARACTER = 9;
     static final int NEGATIVO = 45;
+    static final int DESCONHECIDO = 10;
       
        
     private ArrayList<Token> tokens = new ArrayList();
       private ArrayList<String> linhas_arq = new ArrayList<String>();
+      private int not_alfabeto = -1;
     
     public void lerArq(String arquivo){
         linhas_arq = LerArq.ler(arquivo);
@@ -35,10 +37,10 @@ public class Analisador {
     
     public void separaTokens() {
         
-        int ch = 0;
+        int ch;
     
    for(int i=0;i < linhas_arq.size();i++){
-       
+       ch = 0;
        String temp = linhas_arq.get(i);
        String lexema;
         int tamanho = temp.length();
@@ -54,66 +56,111 @@ public class Analisador {
            
           switch (t){
               
-              case IDENTIFICADOR:                  
+              case IDENTIFICADOR:
+                  
                   current_last = delimitadorId(ch,temp);
-                  String novo = temp.substring(ch, current_last);
-                  Token t1 = new Token(novo, IDENTIFICADOR);
+                  String novo = temp.substring(returnCh_ou_NotAlfa(ch), current_last);
+                  Token t1 = new Token(novo, IDENTIFICADOR,i);
                   tokens.add(t1);
                   
                   ch = current_last;
+                  this.not_alfabeto = -1;
               break;
                   
               case NUMERO: 
                   current_last = delimitadorNumero(ch,temp);                
-                  String novo3 = temp.substring(ch, current_last);
-                  Token t4 = new Token(novo3, NUMERO);
+                  String novo3 = temp.substring(returnCh_ou_NotAlfa(ch), current_last);
+                  Token t4 = new Token(novo3, NUMERO,i);
                   tokens.add(t4);
                     ch = current_last; 
+                    this.not_alfabeto = -1;
                   break;
               
               case CADEIA_DE_CARACTERES:
+                  if(not_alfabeto != -1) {
+                      String novo7 = temp.substring(not_alfabeto, ch);
+                      Token t6 = new Token(novo7, DESCONHECIDO,i);
+                      tokens.add(t6);
+                  }
                   current_last = delimitadorCadeia(ch,temp);                
                   String novo4 = temp.substring(ch, current_last +1);
-                  Token t5 = new Token(novo4, CADEIA_DE_CARACTERES);
+                  Token t5 = new Token(novo4, CADEIA_DE_CARACTERES,i);
                   tokens.add(t5);
                     ch = current_last;
                     ch++;
+                     this.not_alfabeto = -1;
                   break;
                   
                   case CARACTER:
+                      if(not_alfabeto != -1) {
+                      String novo7 = temp.substring(not_alfabeto, ch);
+                      Token t6 = new Token(novo7, DESCONHECIDO,i);
+                      tokens.add(t6);
+                  }
                   current_last = delimitadorCaracter(ch,temp);                
                   String novo5 = temp.substring(ch, current_last+1);
-                  Token t6 = new Token(novo5, CARACTER);
+                  Token t6 = new Token(novo5, CARACTER,i);
                   tokens.add(t6);
                     ch = current_last;
                     ch++;
+                    this.not_alfabeto = -1;
                   break;
                   
                   case ARITMETICOS:
+                      if(not_alfabeto != -1) {
+                      String novo7 = temp.substring(not_alfabeto, ch);
+                      Token t7 = new Token(novo7, DESCONHECIDO,i);
+                      tokens.add(t7);
+                  }
                   String novo1 = temp.substring(ch, current_last+1);
-                  Token t2 = new Token(novo1, ARITMETICOS);
+                  Token t2 = new Token(novo1, ARITMETICOS,i);
                   tokens.add(t2);
                   ch++;
+                   this.not_alfabeto = -1;
                   break;
                   
                   case RELACIONAIS:
+                      if(not_alfabeto != -1) {
+                      String novo7 = temp.substring(not_alfabeto, ch);
+                      Token t7 = new Token(novo7, DESCONHECIDO,i);
+                      tokens.add(t7);
+                  }
                   current_last = delimitadorRelacional(ch,temp);
                   String novo2 = temp.substring(ch, current_last);
-                  Token t3 = new Token(novo2, RELACIONAIS);
+                  Token t3 = new Token(novo2, RELACIONAIS,i);
                   tokens.add(t3);
-                    ch = current_last;                  
+                    ch = current_last;
+                    this.not_alfabeto = -1;
                   break;
                   
                   case DEL_COMENT:
-                  
+                      if(not_alfabeto != -1) {
+                      String novo7 = temp.substring(not_alfabeto, ch);
+                      Token t7 = new Token(novo7, DESCONHECIDO,i);
+                      tokens.add(t7);
+                  }
+                   current_last = delimitadorComentario(ch,temp);                
+                   String novo6 = temp.substring(ch, current_last+1);
+                   Token t7 = new Token(novo6, DEL_COMENT,i);
+                   tokens.add(t7);
+                        ch = current_last;
+                        ch++;
+                        this.not_alfabeto = -1;
                   break;
                   
                   case DELIMITADORES:
+                      if(not_alfabeto != -1) {
+                      String novo7 = temp.substring(not_alfabeto, ch);
+                      Token t8 = new Token(novo7, DESCONHECIDO,i);
+                      tokens.add(t8);
+                  }
                   ch++;
+                  this.not_alfabeto = -1;
                   break;
                   
                   case -1:
-                      System.out.print("entrei aqui");
+                      if(not_alfabeto == -1) not_alfabeto = ch;
+                      ch++;
                       break;
                   
            
@@ -123,12 +170,20 @@ public class Analisador {
  }
     }
     
+    private int returnCh_ou_NotAlfa(int ch){
+        if(this.not_alfabeto != -1) {
+            
+            return not_alfabeto;
+        }
+        else return ch;
+    }
+    
     private int isToken(int cod, int index, String temp){
         
         if(isLetra(cod)) return IDENTIFICADOR; // Identificador,palavras reservadas, 
         else if(cod == 34) return CADEIA_DE_CARACTERES;
         else if(cod == 39) return CARACTER;
-        else if(cod == 45){
+        else if(cod == NEGATIVO){
                     int a = temp.charAt( index +1);
                     if(isNumero(a)) return NUMERO;
                     else return ARITMETICOS;
@@ -162,10 +217,7 @@ public class Analisador {
     
     
     private boolean isLetra(int c){
-        if ( (c>= 97 && c <=122) || (c>= 65 && c <=90)){
-            return true;
-        }
-        
+        if ( (c>= 97 && c <=122) || (c>= 65 && c <=90)) return true;
         else return false;
     }
     
@@ -175,61 +227,82 @@ public class Analisador {
     }
     
     private int delimitadorId(int ch, String temp){// Retorna o indice do primeiro delimitador encontrado.
-        int a = temp.charAt(ch);
+        int a; 
         while(ch < temp.length()){
+            a = temp.charAt(ch);
         if(a == 32 || a == 59||a == 44|| a == 43||a == 45||a == 42||a == 47||a == 60|| a == 62|| a == 61|| a == 34||a == 39 || a == 123||a == 40 ){
             return ch;
         }
         ch++;
-        a = temp.charAt(ch);
+        
         }
         return temp.length() - 1;
     }
     
     private int delimitadorRelacional(int ch, String temp){// Retorna o indice do primeiro delimitador encontrado.
-        int a = temp.charAt(ch);
+        int a;
         while(ch < temp.length()){
+              a = temp.charAt(ch);
         if(a == 32 || a == 59||a == 44|| a == 43||a == 45||a == 42||a == 47|| a == 34||a == 39||a == 123||a == 40|| isNumero(a) || isLetra(a)){
             return ch;
         }
         ch++;
-        a = temp.charAt(ch);
+      
         }
         return temp.length() - 1;
     }
     
     private int delimitadorNumero(int ch, String temp){// Retorna o indice do primeiro delimitador encontrado.
-        int a = temp.charAt(ch);
+        int a;
         while(ch < temp.length()){
+            a = temp.charAt(ch);
         if(a == 32 || a == 59||a == 44|| a == 43||a == 42||a == 47|| a == 34||a == 39||a == 123||a == 40||a == 60|| a == 62|| a == 61){
             return ch;
         }
         ch++;
-        a = temp.charAt(ch);
+        
+        }
+        return temp.length() - 1;
+    }
+    
+    private int delimitadorComentario(int ch, String temp){// Retorna o indice do primeiro delimitador encontrado.
+        int a; 
+        while(ch < temp.length()){
+            a = temp.charAt(ch);
+        if(a == 125){
+            return ch;
+        }
+        ch++;
+        //a = temp.charAt(ch);
         }
         return temp.length() - 1;
     }
     
     private int delimitadorCadeia(int ch, String temp){// Retorna o indice do primeiro delimitador encontrado.
-        int a = temp.charAt(ch+1);
-        while(ch < temp.length()){
+       
+        int b = ch+1;
+         int a;
+        while(b < temp.length()){
+            a = temp.charAt(b);
         if(a == 34){
-            return ch;
+            return b;
         }
-        ch++;
-        a = temp.charAt(ch);
+        b++;
+        
         }
         return temp.length() - 1;
     }
     
     private int delimitadorCaracter(int ch, String temp){// Retorna o indice do primeiro delimitador encontrado.
-        int a = temp.charAt(ch+1);
-        while(ch < temp.length()){
+        int b = ch+1;
+        int a;
+        while(b < temp.length()){
+            a = temp.charAt(b);
         if(a == 39){
-            return ch;
+            return b;
         }
-        ch++;
-        a = temp.charAt(ch);
+        b++;
+        
         }
         return temp.length() - 1;
     }
