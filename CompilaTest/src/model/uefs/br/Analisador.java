@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 public class Analisador {
     
-    static  final int IDENTIFICADOR = 1;
+    static final int IDENTIFICADOR = 1;
     static final int NUMERO = 2;
     static final int ARITMETICOS = 3;
     static final int RELACIONAIS = 4;
@@ -67,7 +67,8 @@ public class Analisador {
                   
               break;
                   
-              case NUMERO: 
+              case NUMERO:
+                  
                   current_last = delimitadorNumero(ch,temp);                
                   String novo3 = temp.substring(ch, current_last);
                   Token t4 = new Token(novo3, NUMERO,i);

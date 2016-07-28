@@ -19,6 +19,11 @@ public class teste {
         /*novo.mostrarLinhas();*/
         novo.separaTokens();
         novo.imprimiTokens();
+        String pau = "_";
+        String pau1 = "-1";
+                  boolean teste = pau.matches("^[a-zA-Z][[a-zA-Z]|\\d|_]*$");
+                  boolean teste1 = pau1.matches("-?\\d+\\.?[\\d]+");
+                  System.out.print(teste1);
         
         
         

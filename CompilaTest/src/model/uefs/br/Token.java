@@ -18,6 +18,7 @@ public class Token {
     private String nome;
     private int tipo;
     private int linha;
+    private boolean correto;
     
      public Token(String nome, int tipo, int linha){
         this.nome = nome;
@@ -61,5 +62,6 @@ public class Token {
     public String toString(){
         return nome;
     }
+    
     
 }
