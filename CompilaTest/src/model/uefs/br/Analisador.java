@@ -13,18 +13,18 @@ import java.util.ArrayList;
  * @author Yuri Silva
  */
 public class Analisador {
-    
-    static final int IDENTIFICADOR = 1;
-    static final int NUMERO = 2;
-    static final int ARITMETICOS = 3;
-    static final int RELACIONAIS = 4;
-    static final int LOGICOS = 5;
-    static final int DEL_COMENT = 6;
-    static final int DELIMITADORES = 7;
-    static final int CADEIA_DE_CARACTERES = 8;
-    static final int CARACTER = 9;
+    static final int PALAVRAS_RESERVADAS = 1;
+    static final int IDENTIFICADOR = 2;
+    static final int NUMERO = 3;
+    static final int ARITMETICOS = 4;
+    static final int RELACIONAIS = 5;
+    static final int LOGICOS = 6;
+    static final int DEL_COMENT = 7;
+    static final int DELIMITADORES = 8;
+    static final int CADEIA_DE_CARACTERES = 9;
+    static final int CARACTER = 10;
     static final int NEGATIVO = 45;
-    static final int DESCONHECIDO = 10;
+    static final int DESCONHECIDO = 11;
       
        
     private ArrayList<Token> tokens = new ArrayList();
@@ -60,7 +60,7 @@ public class Analisador {
                   
                   current_last = delimitadorId(ch,temp);
                   String novo = temp.substring(ch, current_last);
-                  Token t1 = new Token(novo, IDENTIFICADOR,i);
+                  Token t1 = new Token(novo, IDENTIFICADOR,i,"^([a-zA-Z])\\w*$");
                   tokens.add(t1);
                   
                   ch = current_last;
@@ -71,7 +71,7 @@ public class Analisador {
                   
                   current_last = delimitadorNumero(ch,temp);                
                   String novo3 = temp.substring(ch, current_last);
-                  Token t4 = new Token(novo3, NUMERO,i);
+                  Token t4 = new Token(novo3, NUMERO,i,"^([-])?([0-9]+\\.)?\\d+");
                   tokens.add(t4);
                     ch = current_last; 
                     
@@ -81,7 +81,7 @@ public class Analisador {
                   
                   current_last = delimitadorCadeia(ch,temp);                
                   String novo4 = temp.substring(ch, current_last +1);
-                  Token t5 = new Token(novo4, CADEIA_DE_CARACTERES,i);
+                  Token t5 = new Token(novo4, CADEIA_DE_CARACTERES,i,"^\"[a-zA-Z][\\d|[a-zA-Z]|\\s]*\"$");
                   tokens.add(t5);
                     ch = current_last;
                     ch++;
@@ -92,7 +92,7 @@ public class Analisador {
                       
                   current_last = delimitadorCaracter(ch,temp);                
                   String novo5 = temp.substring(ch, current_last+1);
-                  Token t6 = new Token(novo5, CARACTER,i);
+                  Token t6 = new Token(novo5, CARACTER,i,"^\\'([a-zA-Z]|\\d)\\'$");
                   tokens.add(t6);
                     ch = current_last;
                     ch++;
@@ -102,7 +102,7 @@ public class Analisador {
                   case ARITMETICOS:
                       
                   String novo1 = temp.substring(ch, current_last+1);
-                  Token t2 = new Token(novo1, ARITMETICOS,i);
+                  Token t2 = new Token(novo1, ARITMETICOS,i,"[\\+\\-\\*\\/]");
                   tokens.add(t2);
                   ch++;
                    
@@ -112,7 +112,7 @@ public class Analisador {
                       
                   current_last = delimitadorRelacional(ch,temp);
                   String novo2 = temp.substring(ch, current_last);
-                  Token t3 = new Token(novo2, RELACIONAIS,i);
+                  Token t3 = new Token(novo2, RELACIONAIS,i,"[\\>\\<\\=]|<>|>=|<=");
                   tokens.add(t3);
                     ch = current_last;
                     
@@ -122,7 +122,7 @@ public class Analisador {
                       
                    current_last = delimitadorComentario(ch,temp);                
                    String novo6 = temp.substring(ch, current_last+1);
-                   Token t7 = new Token(novo6, DEL_COMENT,i);
+                   Token t7 = new Token(novo6, DEL_COMENT,i,"^\\{.*\\}$");
                    tokens.add(t7);
                         ch = current_last;
                         ch++;
@@ -132,7 +132,7 @@ public class Analisador {
                   case DELIMITADORES:
                   String novoD = temp.substring(ch, current_last+1);
                   if(novoD.equals(")") || novoD.equals("}")){
-                  Token tD = new Token(novoD, DELIMITADORES,i);
+                  Token tD = new Token(novoD, DELIMITADORES,i,"");
                   tokens.add(tD);
                   }
                   ch++;
@@ -142,7 +142,7 @@ public class Analisador {
                   case DESCONHECIDO:
                   current_last = delimitadorDesconhecido(ch,temp);
                   String novo7 = temp.substring(ch, current_last);
-                  Token t8 = new Token(novo7, DESCONHECIDO,i);
+                  Token t8 = new Token(novo7, DESCONHECIDO,i,"");
                   tokens.add(t8);
                   
                   ch = current_last;
@@ -154,14 +154,6 @@ public class Analisador {
        
         }
  }
-    }
-    
-    private int returnCh_ou_NotAlfa(int ch){
-        if(this.not_alfabeto != -1) {
-            
-            return not_alfabeto;
-        }
-        else return ch;
     }
     
     private int isToken(int cod, int index, String temp){

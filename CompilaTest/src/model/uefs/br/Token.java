@@ -19,12 +19,32 @@ public class Token {
     private int tipo;
     private int linha;
     private boolean correto;
+    private String expressaoRegular;
     
-     public Token(String nome, int tipo, int linha){
+    public Token(String nome, int tipo, int linha, String expressaoRegular){
         this.nome = nome;
         this.tipo = tipo;
         this.linha = linha;
+        this.expressaoRegular = expressaoRegular;
     }
+
+    public boolean isCorreto() {
+        return correto;
+    }
+
+    public void setCorreto(boolean correto) {
+        this.correto = correto;
+    }
+
+    public String getExpressaoRegular() {
+        return expressaoRegular;
+    }
+
+    public void setExpressaoRegular(String expressaoRegular) {
+        this.expressaoRegular = expressaoRegular;
+    }
+    
+     
 
     public String getNome() {
         return nome;
