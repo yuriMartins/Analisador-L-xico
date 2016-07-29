@@ -19,13 +19,20 @@ public class Token {
     private int tipo;
     private int linha;
     private boolean status;
-    private String expressaoRegular;
+    
     
     public Token(String nome, int tipo, int linha, String expressaoRegular){
         this.nome = nome;
         this.tipo = tipo;
-        this.linha = linha;
-        this.expressaoRegular = expressaoRegular;
+        this.linha = linha;       
+        this.status = nome.matches(expressaoRegular);
+    }
+    
+    public Token(String nome, int tipo, int linha, boolean status){
+        this.nome = nome;
+        this.tipo = tipo;
+        this.linha = linha;       
+        this.status = status;
     }
 
     public boolean isStatus() {
@@ -35,17 +42,7 @@ public class Token {
     public void setStatus(boolean status) {
         this.status = status;
     }
-
-    public String getExpressaoRegular() {
-        return expressaoRegular;
-    }
-
-    public void setExpressaoRegular(String expressaoRegular) {
-        this.expressaoRegular = expressaoRegular;
-    }
     
-     
-
     public String getNome() {
         return nome;
     }
@@ -80,7 +77,7 @@ public class Token {
     
     @Override
     public String toString(){
-        return nome;
+        return nome + "|" + status + "|" + tipo;
     }
     
     
