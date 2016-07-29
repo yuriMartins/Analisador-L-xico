@@ -130,7 +130,11 @@ public class Analisador {
                   break;
                   
                   case DELIMITADORES:
-                      
+                  String novoD = temp.substring(ch, current_last+1);
+                  if(novoD.equals(")") || novoD.equals("}")){
+                  Token tD = new Token(novoD, DELIMITADORES,i);
+                  tokens.add(tD);
+                  }
                   ch++;
                  
                   break;
@@ -174,7 +178,7 @@ public class Analisador {
         else if(cod == 43 || cod == 42 || cod == 47) return ARITMETICOS;
         else if(cod >=60 && cod <= 62) return RELACIONAIS;
         else if(cod == 123) return DEL_COMENT;
-        else if(cod == 40 || cod == 32 || cod == 59 || cod == 44) return DELIMITADORES;
+        else if(cod == 40 || cod == 32 || cod == 59 || cod == 44 || cod == 41 || cod == 125) return DELIMITADORES;
         
          
         else return DESCONHECIDO;// 
@@ -189,7 +193,7 @@ public class Analisador {
         else if(cod == 43 || cod == 42 || cod == 47|| cod == 45) return ARITMETICOS;
         else if(cod >=60 && cod <= 62) return RELACIONAIS;
         else if(cod == 123) return DEL_COMENT;
-        else if(cod == 40 || cod == 32 || cod == 59 || cod == 44) return DELIMITADORES;
+        else if(cod == 40 || cod == 41 || cod == 32 || cod == 59 || cod == 44 || cod == 125) return DELIMITADORES;
         
          
         else return DESCONHECIDO;// 
@@ -212,7 +216,7 @@ public class Analisador {
         int a; 
         while(ch < temp.length()){
             a = temp.charAt(ch);
-        if(a == 32 || a == 59||a == 44|| a == 43||a == 45||a == 42||a == 47||a == 60|| a == 62|| a == 61|| a == 34||a == 39 || a == 123||a == 40 ){
+        if(a == 32 || a == 59||a == 44|| a == 43||a == 45||a == 42||a == 47||a == 60|| a == 62|| a == 61|| a == 34||a == 39 || a == 123 || a == 40 || a == 125 || a == 41 ){
             return ch;
         }
         ch++;
@@ -238,7 +242,7 @@ public class Analisador {
         int a;
         while(ch < temp.length()){
             a = temp.charAt(ch);
-        if(a == 32 || a == 59||a == 44|| a == 43||a == 42||a == 47|| a == 34||a == 39||a == 123||a == 40||a == 60|| a == 62|| a == 61){
+        if(a == 32 || a == 59||a == 44|| a == 43||a == 42||a == 47|| a == 34||a == 39||a == 123||a == 40||a == 60|| a == 62|| a == 61 || a==125 || a == 41){
             return ch;
         }
         ch++;
@@ -248,15 +252,18 @@ public class Analisador {
     }
     
     private int delimitadorComentario(int ch, String temp){// Retorna o indice do primeiro delimitador encontrado.
-        int a; 
+        int a;
+        int retorno = -1;
         while(ch < temp.length()){
             a = temp.charAt(ch);
         if(a == 125){
-            return ch;
+            retorno = ch;
         }
         ch++;
-        //a = temp.charAt(ch);
+       //a = temp.charAt(ch);
         }
+         if(retorno != -1) return retorno;
+        
         return temp.length() - 1;
     }
     
@@ -264,7 +271,7 @@ public class Analisador {
         int a; 
         while(ch < temp.length()){
             a = temp.charAt(ch);
-        if(a == 32 || a== 59 || a == 44 || a == 40 || a == 123 || a == 34 || a == 39|| a == 42 ||a == 43|| a == 45 || a == 47 || a == 60 || a == 61 || a == 62){
+        if(a == 32 || a== 59 || a == 44 || a == 40 || a == 123 || a == 34 || a == 39|| a == 42 ||a == 43|| a == 45 || a == 47 || a == 60 || a == 61 || a == 62 || a == 125 || a == 41){
             return ch;
         }
         ch++;
