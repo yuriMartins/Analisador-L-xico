@@ -14,11 +14,9 @@ public class teste {
     public static void main(String[] args){
         
         Analisador novo = new Analisador();
-        String t = "exemplo_teste_lexico.txt";
-        novo.lerArq(t);
-        /*novo.mostrarLinhas();*/
-        novo.separaTokens();
-        novo.imprimiTokens();
+        novo.alisarCodigo("exemplo_teste_lexico.txt");
+        
+        //novo.escreveArq("dois.txt");
         /*String str = "1arr()?";       
                   boolean teste = str.matches("^([a-zA-Z])\\w*$");//Identificador
                   boolean teste1 = str.matches("^([-])?([0-9]+\\.)?\\d+");//Número
@@ -30,7 +28,8 @@ public class teste {
                   boolean teste7 = str.matches("^\\'([a-zA-Z]|\\d)\\'$");//Caractere
                   boolean teste8 = str.matches("programa|const|var|funcao|inicio|fim|se|entao|senao|enquanto|faca|leia|escreva|inteiro|real|booleano|verdadeiro|falso|cadeia|caractere");//Palavras Reservadas
                   System.out.print(teste6);*/
-        
+        //String tal = novo.getNometipos(1);
+        //System.out.print(tal);
         
         
         

@@ -31,11 +31,17 @@ public class Analisador {
       private ArrayList<String> linhas_arq = new ArrayList<String>();
       private int not_alfabeto = -1;
     
-    public void lerArq(String arquivo){
-        linhas_arq = LerArq.ler(arquivo);
+    private void lerArq(String arquivo){
+        linhas_arq = ReadWriteArq.ler(arquivo);
     }
     
-    public void separaTokens() {
+    public void alisarCodigo(String nomeArquivo){
+        lerArq(nomeArquivo);
+        separaTokens();
+        ReadWriteArq.escreve(tokens, "Result.txt");
+    }
+    
+    private void separaTokens() {
         
         int ch;
     
@@ -78,24 +84,38 @@ public class Analisador {
                   break;
               
               case CADEIA_DE_CARACTERES:
-                  
-                  current_last = delimitadorCadeia(ch,temp);                
-                  String novo4 = temp.substring(ch, current_last +1);
+                  boolean pula;
+                  current_last = delimitadorCadeia(ch,temp);  
+                  String novo4;
+                  if((int)temp.charAt(current_last) == 34) {
+                       novo4 = temp.substring(ch, current_last +1);
+                       pula = true;
+                  }else {
+                      novo4 = temp.substring(ch, current_last);
+                      pula = false;
+                  }
                   Token t5 = new Token(novo4, CADEIA_DE_CARACTERES,i+1,"^\"[a-zA-Z][\\d|[a-zA-Z]|\\s]*\"$");
                   tokens.add(t5);
                     ch = current_last;
-                    ch++;
+                    if(pula == true)ch++;
                      
                   break;
                   
                   case CARACTER:
-                      
+                      boolean pula1;
                   current_last = delimitadorCaracter(ch,temp);                
-                  String novo5 = temp.substring(ch, current_last+1);
+                  String novo5;
+                  if((int)temp.charAt(current_last) == 39) {
+                       novo5 = temp.substring(ch, current_last +1);
+                       pula1 = true;
+                  }else {
+                      novo5 = temp.substring(ch, current_last);
+                      pula1 = false;
+                  }
                   Token t6 = new Token(novo5, CARACTER,i+1,"^\\'([a-zA-Z]|\\d)\\'$");
                   tokens.add(t6);
                     ch = current_last;
-                    ch++;
+                    if(pula1 == true)ch++;
                     
                   break;
                   
@@ -291,7 +311,7 @@ public class Analisador {
          int a;
         while(b < temp.length()){
             a = temp.charAt(b);
-        if(a == 34){
+        if(a == 34 || a == 40 || a == 41 || a == 123 || a == 125 || a == 44 || a == 49){
             return b;
         }
         b++;
@@ -305,7 +325,7 @@ public class Analisador {
         int a;
         while(b < temp.length()){
             a = temp.charAt(b);
-        if(a == 39){
+        if(a == 39 || a == 40 || a == 41 || a == 123 || a == 125 || a == 44 || a == 49){
             return b;
         }
         b++;
@@ -321,6 +341,31 @@ public class Analisador {
     public void mostrarLinhas(){
         System.out.println(linhas_arq);
     }
+    
+    public enum Tipos {
+	Palavra_Reservada(1), Identificador(2), Numero(3), 
+        Operador_Aritmetico(4), Operador_Relacional(5), Operador_Logico(6), 
+        Delimitador_Comentario(7), Delimitador(8), Cadeia_de_Caracteres(9), Caracter(10), Desconhecido(11);
+
+
+	public int valorTipo;
+	Tipos(int valor) {
+		valorTipo = valor;
+	}
+        
+        public int getValor(){
+		return valorTipo;
+	}
+        
+        
+}
+    
+    public String getNometipos(int i){
+            for(Tipos op : Tipos.values()){	
+            if(i == op.getValor()) return op.name();
+            }
+            return null;
+        }
    
     
     

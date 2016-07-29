@@ -77,7 +77,7 @@ public class Token {
     
     @Override
     public String toString(){
-        return nome + "|" + status + "|" + tipo;
+        return linha + "|" + nome + "|" + status + "|" + tipo;
     }
     
     
