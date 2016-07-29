@@ -18,7 +18,7 @@ public class Token {
     private String nome;
     private int tipo;
     private int linha;
-    private boolean correto;
+    private boolean status;
     private String expressaoRegular;
     
     public Token(String nome, int tipo, int linha, String expressaoRegular){
@@ -28,12 +28,12 @@ public class Token {
         this.expressaoRegular = expressaoRegular;
     }
 
-    public boolean isCorreto() {
-        return correto;
+    public boolean isStatus() {
+        return status;
     }
 
-    public void setCorreto(boolean correto) {
-        this.correto = correto;
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     public String getExpressaoRegular() {
