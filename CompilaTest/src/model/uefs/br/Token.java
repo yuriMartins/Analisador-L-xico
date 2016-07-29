@@ -17,9 +17,8 @@ public class Token {
     //private ArrayList<String>lexemas = new ArrayList<String>();
     private String nome;
     private int tipo;
-    private int linha;
+     private int linha;
     private boolean status;
-    
     
     public Token(String nome, int tipo, int linha, String expressaoRegular){
         this.nome = nome;
@@ -34,6 +33,7 @@ public class Token {
         this.linha = linha;       
         this.status = status;
     }
+   
 
     public boolean isStatus() {
         return status;
@@ -75,9 +75,39 @@ public class Token {
         return true;
     }
     
+    public enum Tipos {
+	Palavra_Reservada(1), Identificador(2), Numero(3), 
+        Operador_Aritmetico(4), Operador_Relacional(5), Operador_Logico(6), 
+        Delimitador_Comentario(7), Delimitador(8), Cadeia_de_Caracteres(9), Caracter(10), Desconhecido(11);
+
+
+	public int valorTipo;
+	Tipos(int valor) {
+		valorTipo = valor;
+	}
+        
+        public int getValor(){
+		return valorTipo;
+	}
+        
+        
+}
+    
+    private String getNomeTipos(int i){
+            for(Tipos op : Tipos.values()){	
+            if(i == op.getValor()) return op.name();
+            }
+            return null;
+        }
+    
+    private String nomeStatus(boolean status){
+        if(status) return "Correto";
+        else return "ERRO!!!";
+    }
+    
     @Override
     public String toString(){
-        return linha + "|" + nome + "|" + status + "|" + tipo;
+        return linha + "|" + nome + "|" + getNomeTipos(tipo) + "|" + nomeStatus(status);
     }
     
     

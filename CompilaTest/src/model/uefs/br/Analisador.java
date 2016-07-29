@@ -37,7 +37,7 @@ public class Analisador {
     
     public void alisarCodigo(String nomeArquivo){
         lerArq(nomeArquivo);
-        separaTokens();
+        separaTokens();        
         ReadWriteArq.escreve(tokens, "Result.txt");
     }
     
@@ -342,30 +342,7 @@ public class Analisador {
         System.out.println(linhas_arq);
     }
     
-    public enum Tipos {
-	Palavra_Reservada(1), Identificador(2), Numero(3), 
-        Operador_Aritmetico(4), Operador_Relacional(5), Operador_Logico(6), 
-        Delimitador_Comentario(7), Delimitador(8), Cadeia_de_Caracteres(9), Caracter(10), Desconhecido(11);
-
-
-	public int valorTipo;
-	Tipos(int valor) {
-		valorTipo = valor;
-	}
-        
-        public int getValor(){
-		return valorTipo;
-	}
-        
-        
-}
     
-    public String getNometipos(int i){
-            for(Tipos op : Tipos.values()){	
-            if(i == op.getValor()) return op.name();
-            }
-            return null;
-        }
    
     
     
