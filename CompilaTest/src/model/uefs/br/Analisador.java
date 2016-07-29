@@ -200,7 +200,7 @@ public class Analisador {
         else if(cod == 43 || cod == 42 || cod == 47|| cod == 45) return ARITMETICOS;
         else if(cod >=60 && cod <= 62) return RELACIONAIS;
         else if(cod == 123) return DEL_COMENT;
-        else if(cod == 40 || cod == 41 || cod == 32 || cod == 59 || cod == 44 || cod == 125) return DELIMITADORES;
+        else if(cod == 40 || cod == 41 || cod == 32 || cod == 59 || cod == 44 || cod == 125|| cod == 9) return DELIMITADORES;
         
          
         else return DESCONHECIDO;// 
@@ -221,7 +221,7 @@ public class Analisador {
         int a; 
         while(ch < temp.length()){
             a = temp.charAt(ch);
-        if(a == 32 || a == 59||a == 44|| a == 43||a == 45||a == 42||a == 47||a == 60|| a == 62|| a == 61|| a == 34||a == 39 || a == 123 || a == 40 || a == 125 || a == 41 ){
+        if(a == 32 || a == 59||a == 44|| a == 43||a == 45||a == 42||a == 47||a == 60|| a == 62|| a == 61|| a == 34||a == 39 || a == 123 || a == 40 || a == 125 || a == 41 || a == 9 ){
             return ch;
         }
         ch++;
@@ -247,7 +247,7 @@ public class Analisador {
         int a;
         while(ch < temp.length()){
             a = temp.charAt(ch);
-        if(a == 32 || a == 59||a == 44|| a == 43||a == 42||a == 47|| a == 34||a == 39||a == 123||a == 40||a == 60|| a == 62|| a == 61 || a==125 || a == 41){
+        if(a == 32 || a == 59||a == 44|| a == 43||a == 42||a == 47|| a == 34||a == 39||a == 123||a == 40||a == 60|| a == 62|| a == 61 || a==125 || a == 41 || a == 9){
             return ch;
         }
         ch++;
@@ -276,7 +276,7 @@ public class Analisador {
         int a; 
         while(ch < temp.length()){
             a = temp.charAt(ch);
-        if(a == 32 || a== 59 || a == 44 || a == 40 || a == 123 || a == 34 || a == 39|| a == 42 ||a == 43|| a == 45 || a == 47 || a == 60 || a == 61 || a == 62 || a == 125 || a == 41){
+        if(a == 32 || a== 59 || a == 44 || a == 40 || a == 123 || a == 34 || a == 39|| a == 42 ||a == 43|| a == 45 || a == 47 || a == 60 || a == 61 || a == 62 || a == 125 || a == 41 || a == 9){
             return ch;
         }
         ch++;
