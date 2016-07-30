@@ -100,14 +100,11 @@ public class Token {
             return null;
         }
     
-    private String nomeStatus(boolean status){
-        if(status) return "Correto";
-        else return "ERRO!!!";
-    }
-    
     @Override
     public String toString(){
-        return linha + "|" + nome + "|" + getNomeTipos(tipo) + "|" + nomeStatus(status);
+        if(this.status)
+        return linha + "|" + nome + "|" + getNomeTipos(tipo);
+        else return linha + "|" + nome + "|" + getNomeTipos(tipo) + " mal formado!";
     }
     
     
