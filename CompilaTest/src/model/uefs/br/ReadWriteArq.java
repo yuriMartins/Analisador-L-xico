@@ -40,13 +40,15 @@ public class ReadWriteArq {
         }
         
         public static void escreve(ArrayList<Token> novo, String nome_arquivo){
+           
             try{
 			String nome = nome_arquivo;
 			
                     try (BufferedWriter br = new BufferedWriter(new FileWriter(nome_arquivo))) {
                             for (Token novo1 : novo) {
                                 br.write(novo1.toString());
-                                br.newLine();
+                                br.newLine();  
+                               
                             }
                         
                     }

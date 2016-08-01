@@ -104,7 +104,10 @@ public class Token {
     public String toString(){
         if(this.status)
         return linha + "|" + nome + "|" + getNomeTipos(tipo);
-        else return linha + "|" + nome + "|" + getNomeTipos(tipo) + " mal formado!";
+        else {
+            if(tipo == 11) return linha + "|" + nome + "|" + "Contém Caracteres Desconhecido pelo alfabeto da linguagem";
+            return linha + "|" + nome + "|" + getNomeTipos(tipo) + " mal formado!";
+        }
     }
     
     
