@@ -7,14 +7,17 @@ package model.uefs.br;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 /**
  *
  * @author Kelvin
  */
-public class LerArq {
+public class ReadWriteArq {
     
     private String arquivo;
     private static ArrayList<String> linhas_arq = new ArrayList<String>();
@@ -34,6 +37,24 @@ public class LerArq {
 			ioe.printStackTrace();
 		}
                 return linhas_arq;
+        }
+        
+        public static void escreve(ArrayList<Token> novo, String nome_arquivo){
+           
+            try{
+			String nome = nome_arquivo;
+			
+                    try (BufferedWriter br = new BufferedWriter(new FileWriter(nome_arquivo))) {
+                            for (Token novo1 : novo) {
+                                br.write(novo1.toString());
+                                br.newLine();  
+                               
+                            }
+                        
+                    }
+		}catch(IOException ioe){
+			ioe.printStackTrace();
+		}
         }
 }
         

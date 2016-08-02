@@ -1,0 +1,30 @@
+1|exemplo|Identificador
+1|teste|Identificador
+1|;|Delimitador
+3|real|Palavra_Reservada
+3|f|Identificador
+3|=|Operador_Relacional
+3|3a|Numero mal formado!
+3|;|Delimitador
+5|caractere|Palavra_Reservada
+5|flag|Identificador
+5|=|Operador_Relacional
+5|'1'|Caracter
+5|;|Delimitador
+7|se|Palavra_Reservada
+7|(|Delimitador
+7|f|Identificador
+7|>=|Operador_Relacional
+7|10|Numero
+7|)|Delimitador
+7|e|Operador_Logico
+7|(|Delimitador
+7|f|Identificador
+7|<|Operador_Relacional
+7|23|Numero
+7|)|Delimitador
+8|escreva|Palavra_Reservada
+8|(|Delimitador
+8|" mensagem"|Cadeia_de_Caracteres mal formado!
+8|)|Delimitador
+8|;|Delimitador

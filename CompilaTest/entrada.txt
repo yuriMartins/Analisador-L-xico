@@ -1,0 +1,8 @@
+exemplo teste;
+
+real f = 3a;
+
+caractere flag = '1';
+
+se ( f >= 10) e (f < 23)
+	escreva(" mensagem");

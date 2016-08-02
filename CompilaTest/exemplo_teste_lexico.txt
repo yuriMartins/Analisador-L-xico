@@ -1,0 +1,8 @@
+exemplo teste;
+
+real f = 3a;
+{sdf
+caractere "sdfsdf" flag = 'teste'; aa
+
+se ( f >= 10) e (f < ) 
+	escreva(" mensagem );

@@ -13,43 +13,55 @@ import java.util.ArrayList;
  * @author Yuri Silva
  */
 public class Analisador {
-    
-    static  final int IDENTIFICADOR = 1;
-    static final int NUMERO = 2;
-    static final int ARITMETICOS = 3;
-    static final int RELACIONAIS = 4;
-    static final int LOGICOS = 5;
-    static final int DEL_COMENT = 6;
-    static final int DELIMITADORES = 7;
-    static final int CADEIA_DE_CARACTERES = 8;
-    static final int CARACTER = 9;
+    static final int PALAVRAS_RESERVADAS = 1;
+    static final int IDENTIFICADOR = 2;
+    static final int NUMERO = 3;
+    static final int ARITMETICOS = 4;
+    static final int RELACIONAIS = 5;
+    static final int LOGICOS = 6;
+    static final int DEL_COMENT = 7;
+    static final int DELIMITADORES = 8;
+    static final int CADEIA_DE_CARACTERES = 9;
+    static final int CARACTER = 10;
     static final int NEGATIVO = 45;
-    static final int DESCONHECIDO = 10;
+    static final int DESCONHECIDO = 11;
       
        
     private ArrayList<Token> tokens = new ArrayList();
       private ArrayList<String> linhas_arq = new ArrayList<String>();
       private int not_alfabeto = -1;
     
-    public void lerArq(String arquivo){
-        linhas_arq = LerArq.ler(arquivo);
+    private void lerArq(String arquivo){
+        linhas_arq = ReadWriteArq.ler(arquivo);
     }
-    
-    public void separaTokens() {
+    /**
+     * Única função que pode ser chamada pelo objeto da classe, que analisa o código do arquivo passado por parâmetro.
+     * @param nomeArquivo 
+     */
+    public void alisarCodigo(String nomeArquivo){
+        lerArq(nomeArquivo);
+        separaTokens();        
+        ReadWriteArq.escreve(tokens, "Result.txt");
+    }
+    /**
+     * Método responsável por separar todos os lexemas referentes a sua classe-token definidas pela linguagem
+     */
+    private void separaTokens() {
         
         int ch;
     
-   for(int i=0;i < linhas_arq.size();i++){
+   for(int i=0;i < linhas_arq.size();i++){ // Percorre todas as linhas do arquivo
        ch = 0;
        String temp = linhas_arq.get(i);
-       String lexema;
+       System.out.print(temp.length() + temp);
+       
         int tamanho = temp.length();
         
         
         
         
         while(ch < tamanho){
-        int t = isToken((int)temp.charAt(ch),ch,temp);
+        int t = isToken((int)temp.charAt(ch),ch,temp);// Recebe o Token referente ao caracter que está começando o lexema
         int current_last = ch;        
         
            
@@ -60,38 +72,48 @@ public class Analisador {
                   
                   current_last = delimitadorId(ch,temp);
                   String novo = temp.substring(ch, current_last);
-                  Token t1 = new Token(novo, IDENTIFICADOR,i);
+                  Token t1 = new Token(novo, IDENTIFICADOR,i+1,"^([a-zA-Z])\\w*$");
                   tokens.add(t1);
                   
                   ch = current_last;
-                  
+                 
               break;
                   
-              case NUMERO: 
-                  current_last = delimitadorNumero(ch,temp);                
+              case NUMERO:
+                  System.out.print(ch);
+                  current_last = delimitadorNumero(ch,temp);
+                  System.out.print(current_last);
                   String novo3 = temp.substring(ch, current_last);
-                  Token t4 = new Token(novo3, NUMERO,i);
+                  Token t4 = new Token(novo3, NUMERO,i+1,"^([-])?([0-9]+\\.)?\\d+");
                   tokens.add(t4);
                     ch = current_last; 
                     
                   break;
               
               case CADEIA_DE_CARACTERES:
+                  boolean pula;
+                  current_last = delimitadorCadeia(ch,temp);  
+                  String novo4;
+                  if((int)temp.charAt(current_last) == 34) pula = true;
+                  else pula = false;
                   
-                  current_last = delimitadorCadeia(ch,temp);                
-                  String novo4 = temp.substring(ch, current_last +1);
-                  Token t5 = new Token(novo4, CADEIA_DE_CARACTERES,i);
+                  novo4 = temp.substring(ch, current_last + 1);
+                  Token t5 = new Token(novo4, CADEIA_DE_CARACTERES,i+1,"^\"[a-zA-Z][\\d|[a-zA-Z]|\\s]*\"$");
                   tokens.add(t5);
                     ch = current_last;
-                    ch++;
+                    /*if(pula == true)*/ch++;
                      
                   break;
                   
                   case CARACTER:
-                      
+                      boolean pula1;
                   current_last = delimitadorCaracter(ch,temp);                
-                  String novo5 = temp.substring(ch, current_last+1);
-                  Token t6 = new Token(novo5, CARACTER,i);
+                  String novo5;
+                  if((int)temp.charAt(current_last) == 39) pula1 = true;
+                  else pula1 = false;
+                  
+                  novo5 = temp.substring(ch, current_last + 1);
+                  Token t6 = new Token(novo5, CARACTER,i+1,"^\\'([a-zA-Z]|\\d)\\'$");
                   tokens.add(t6);
                     ch = current_last;
                     ch++;
@@ -101,8 +123,8 @@ public class Analisador {
                   case ARITMETICOS:
                       
                   String novo1 = temp.substring(ch, current_last+1);
-                  Token t2 = new Token(novo1, ARITMETICOS,i);
-                  tokens.add(t2);
+                  Token t2 = new Token(novo1, ARITMETICOS,i+1,"[\\+\\-\\*\\/]");
+                  tokens.add(t2);                  
                   ch++;
                    
                   break;
@@ -111,7 +133,7 @@ public class Analisador {
                       
                   current_last = delimitadorRelacional(ch,temp);
                   String novo2 = temp.substring(ch, current_last);
-                  Token t3 = new Token(novo2, RELACIONAIS,i);
+                  Token t3 = new Token(novo2, RELACIONAIS,i+1,"[\\>\\<\\=]|<>|>=|<=");
                   tokens.add(t3);
                     ch = current_last;
                     
@@ -121,7 +143,7 @@ public class Analisador {
                       
                    current_last = delimitadorComentario(ch,temp);                
                    String novo6 = temp.substring(ch, current_last+1);
-                   Token t7 = new Token(novo6, DEL_COMENT,i);
+                   Token t7 = new Token(novo6, DEL_COMENT,i+1,"^\\{.*\\}$");
                    tokens.add(t7);
                         ch = current_last;
                         ch++;
@@ -129,7 +151,11 @@ public class Analisador {
                   break;
                   
                   case DELIMITADORES:
-                      
+                      if((int) temp.charAt(ch) != 32 && (int) temp.charAt(ch) != 9){
+                  String novoD = temp.substring(ch, current_last+1);
+                  Token tD = new Token(novoD, DELIMITADORES,i+1,true);
+                  tokens.add(tD);
+                  }
                   ch++;
                  
                   break;
@@ -137,7 +163,7 @@ public class Analisador {
                   case DESCONHECIDO:
                   current_last = delimitadorDesconhecido(ch,temp);
                   String novo7 = temp.substring(ch, current_last);
-                  Token t8 = new Token(novo7, DESCONHECIDO,i);
+                  Token t8 = new Token(novo7, DESCONHECIDO,i+1,false);
                   tokens.add(t8);
                   
                   ch = current_last;
@@ -148,15 +174,24 @@ public class Analisador {
           }
        
         }
+        separaDelimitador(); 
  }
+   
     }
-    
-    private int returnCh_ou_NotAlfa(int ch){
-        if(this.not_alfabeto != -1) {
-            
-            return not_alfabeto;
+    /**
+     * Separa os lexemas que são palavras reservadas ou operadores lógicos que estão como tipo Identificador
+     */
+    private void separaDelimitador(){
+        
+        for (Token token : tokens) {
+            if (token.getNome().matches("programa|const|var|funcao|inicio|fim|se|entao|senao|enquanto|faca|leia|escreva|inteiro|real|booleano|verdadeiro|falso|cadeia|caractere")){
+                token.setTipo(PALAVRAS_RESERVADAS);                
+            }
+            if(token.getNome().matches("nao|e|ou")){
+                token.setTipo(LOGICOS);                
+            }
         }
-        else return ch;
+        
     }
     
     private int isToken(int cod, int index, String temp){
@@ -164,16 +199,20 @@ public class Analisador {
         if(isLetra(cod)) return IDENTIFICADOR; // Identificador,palavras reservadas, 
         else if(cod == 34) return CADEIA_DE_CARACTERES;
         else if(cod == 39) return CARACTER;
-        else if(cod == NEGATIVO){
-                    int a = temp.charAt( index +1);
-                    if(isNumero(a)) return NUMERO;
-                    else return ARITMETICOS;
+        else if(cod == 45){
+            int a;
+                    if(index + 1 < temp.length()){
+                     a = temp.charAt( index + 1);
+                     if(isNumero(a)) return NUMERO;
+                     else return ARITMETICOS;
+                    }
+                    return ARITMETICOS;
                  }
         else if(isNumero(cod)) return NUMERO;
         else if(cod == 43 || cod == 42 || cod == 47) return ARITMETICOS;
         else if(cod >=60 && cod <= 62) return RELACIONAIS;
         else if(cod == 123) return DEL_COMENT;
-        else if(cod == 40 || cod == 32 || cod == 59 || cod == 44) return DELIMITADORES;
+        else if(cod == 40 || cod == 32 || cod == 59 || cod == 44 || cod == 41 || cod == 125 || cod == 9) return DELIMITADORES;
         
          
         else return DESCONHECIDO;// 
@@ -188,7 +227,7 @@ public class Analisador {
         else if(cod == 43 || cod == 42 || cod == 47|| cod == 45) return ARITMETICOS;
         else if(cod >=60 && cod <= 62) return RELACIONAIS;
         else if(cod == 123) return DEL_COMENT;
-        else if(cod == 40 || cod == 32 || cod == 59 || cod == 44) return DELIMITADORES;
+        else if(cod == 40 || cod == 41 || cod == 32 || cod == 59 || cod == 44 || cod == 125|| cod == 9) return DELIMITADORES;
         
          
         else return DESCONHECIDO;// 
@@ -198,26 +237,24 @@ public class Analisador {
     
     
     private boolean isLetra(int c){
-        if ( (c>= 97 && c <=122) || (c>= 65 && c <=90)) return true;
-        else return false;
+        return (c>= 97 && c <=122) || (c>= 65 && c <=90);
     }
     
     private boolean isNumero(int c){
-        if ( (c>= 48 && c <=57)) return true;        
-        else return false;
+        return c>= 48 && c <=57;
     }
     
     private int delimitadorId(int ch, String temp){// Retorna o indice do primeiro delimitador encontrado.
         int a; 
         while(ch < temp.length()){
             a = temp.charAt(ch);
-        if(a == 32 || a == 59||a == 44|| a == 43||a == 45||a == 42||a == 47||a == 60|| a == 62|| a == 61|| a == 34||a == 39 || a == 123||a == 40 ){
+        if(a == 32 || a == 59||a == 44|| a == 43||a == 45||a == 42||a == 47||a == 60|| a == 62|| a == 61|| a == 34||a == 39 || a == 123 || a == 40 || a == 125 || a == 41 || a == 9 ){
             return ch;
         }
         ch++;
         
         }
-        return temp.length() - 1;
+        return temp.length();
     }
     
     private int delimitadorRelacional(int ch, String temp){// Retorna o indice do primeiro delimitador encontrado.
@@ -230,32 +267,36 @@ public class Analisador {
         ch++;
       
         }
-        return temp.length() - 1;
+        return temp.length();
     }
     
     private int delimitadorNumero(int ch, String temp){// Retorna o indice do primeiro delimitador encontrado.
         int a;
+        if(temp.charAt(ch) == 45) ch++;
         while(ch < temp.length()){
             a = temp.charAt(ch);
-        if(a == 32 || a == 59||a == 44|| a == 43||a == 42||a == 47|| a == 34||a == 39||a == 123||a == 40||a == 60|| a == 62|| a == 61){
+        if(a == 32 || a == 59|| a == 45 ||a == 44|| a == 43||a == 42||a == 47|| a == 34||a == 39||a == 123||a == 40||a == 60|| a == 62|| a == 61 || a == 125 || a == 41 || a == 9){
             return ch;
         }
         ch++;
         
         }
-        return temp.length() - 1;
+        return temp.length();
     }
     
     private int delimitadorComentario(int ch, String temp){// Retorna o indice do primeiro delimitador encontrado.
-        int a; 
+        int a;
+        int retorno = -1;
         while(ch < temp.length()){
             a = temp.charAt(ch);
-        if(a == 125){
-            return ch;
+        if(a == 125){// Até encontrar o fecha chaves de comentátio
+            retorno = ch;
         }
         ch++;
-        //a = temp.charAt(ch);
+       //a = temp.charAt(ch);
         }
+         if(retorno != -1) return retorno;
+        
         return temp.length() - 1;
     }
     
@@ -263,13 +304,13 @@ public class Analisador {
         int a; 
         while(ch < temp.length()){
             a = temp.charAt(ch);
-        if(a == 32 || a== 59 || a == 44 || a == 40 || a == 123 || a == 34 || a == 39|| a == 42 ||a == 43|| a == 45 || a == 47 || a == 60 || a == 61 || a == 62){
+        if(a == 32 || a== 59 || a == 44 || a == 40 || a == 123 || a == 34 || a == 39|| a == 42 ||a == 43|| a == 45 || a == 47 || a == 60 || a == 61 || a == 62 || a == 125 || a == 41 || a == 9){
             return ch;
         }
         ch++;
         //a = temp.charAt(ch);
         }
-        return temp.length() - 1;
+        return temp.length();
     }
     
     private int delimitadorCadeia(int ch, String temp){// Retorna o indice do primeiro delimitador encontrado.
@@ -278,9 +319,8 @@ public class Analisador {
          int a;
         while(b < temp.length()){
             a = temp.charAt(b);
-        if(a == 34){
-            return b;
-        }
+        if(a == 34) return b;            
+        
         b++;
         
         }
@@ -292,11 +332,8 @@ public class Analisador {
         int a;
         while(b < temp.length()){
             a = temp.charAt(b);
-        if(a == 39){
-            return b;
-        }
-        b++;
-        
+        if(a == 39) return b;            
+            b++;
         }
         return temp.length() - 1;
     }
@@ -308,6 +345,8 @@ public class Analisador {
     public void mostrarLinhas(){
         System.out.println(linhas_arq);
     }
+    
+    
    
     
     
